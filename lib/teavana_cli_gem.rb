@@ -1,5 +1,8 @@
-require "teavana_cli_gem/version"
+require 'open-uri'
+require 'nokogiri'
+require 'pry'
 
-module TeavanaCliGem
-  # Your code goes here...
-end
+require_relative "./teavana_cli_gem/version"
+require_relative "./teavana_cli_gem/cli"
+require_relative "./teavana_cli_gem/teascraper"
+require_relative "./teavana_cli_gem/teas"
