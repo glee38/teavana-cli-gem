@@ -67,27 +67,39 @@ class TeavanaCliGem::TeaScraper
     end
   end
 
-  def self.scrape_specific_tea_kinds_urls # need an argument later of input
-    scrape_tea_urls
+  # def self.scrape_specific_tea_kinds_urls # need an argument later of input
+  #   scrape_tea_urls
     
-    @@tea_urls.each do |url|
-      index_url = url
-      doc = Nokogiri::HTML(open(index_url))
-      @specific_tea_kinds_urls = [] # array of urls for specific tea kinds for a single type of tea. Ex. Green => [url for matcha, url for dragon pearl]
+  #   @@tea_urls.each do |url|
+  #     index_url = url
+  #     doc = Nokogiri::HTML(open(index_url))
+  #     @specific_tea_kinds_urls = [] # array of urls for specific tea kinds for a single type of tea. Ex. Green => [url for matcha, url for dragon pearl]
+
+  #     doc.css(".product_card .name a").each do |card|
+  #        @specific_tea_kinds_urls << card["href"] unless @specific_tea_kinds_urls.include?(card["href"]) # url of each specific tea card (leads to tea details)
+  #        @specific_tea_kinds_urls
+  #      end
+  #      @@specific_tea_kinds_urls_all << @specific_tea_kinds_urls
+  #   end
+  #   @@specific_tea_kinds_urls_all # nested array of all urls for each tea's specific teas
+  # end
+
+  def self.scrape_specific_tea_kinds_urls(input1)
+    scrape_tea_urls
+    index_url = @@tea_urls[input1-1]
+    doc = Nokogiri::HTML(open(index_url))
+    @specific_tea_kinds_urls = [] # array of urls for specific tea kinds for a single type of tea. Ex. Green => [url for matcha, url for dragon pearl]
 
       doc.css(".product_card .name a").each do |card|
          @specific_tea_kinds_urls << card["href"] unless @specific_tea_kinds_urls.include?(card["href"]) # url of each specific tea card (leads to tea details)
-         @specific_tea_kinds_urls
        end
-       @@specific_tea_kinds_urls_all << @specific_tea_kinds_urls
-    end
-    @@specific_tea_kinds_urls_all # nested array of all urls for each tea's specific teas
+    @specific_tea_kinds_urls
   end
  
-  def self.scrape_tea_details(input1, input2) # add argument of input later
-    scrape_specific_tea_kinds_urls
+  def self.scrape_tea_details(input2) # add argument of input later
+    #scrape_specific_tea_kinds_urls(input1)
     @tea_details = {}
-    index_url = @@specific_tea_kinds_urls_all[input1-1][input2-1]
+    index_url = @specific_tea_kinds_urls[input2-1]
     doc = Nokogiri::HTML(open(index_url))
       price = "N/A"
       availability = "N/A"
@@ -110,6 +122,33 @@ class TeavanaCliGem::TeaScraper
       # @tea_details.reject! {|k,v| v.include?(" ")} 
       @tea_details 
   end
+
+  # def self.scrape_tea_details(input1, input2) # add argument of input later
+  #   scrape_specific_tea_kinds_urls
+  #   @tea_details = {}
+  #   index_url = @@specific_tea_kinds_urls_all[input1-1][input2-1]
+  #   doc = Nokogiri::HTML(open(index_url))
+  #     price = "N/A"
+  #     availability = "N/A"
+  #     description = "N/A"
+  #     tasting_notes = "N/A"
+  #     caffeine_level = "N/A"
+  #     ingredients = "N/A"
+
+  #     # rating =
+  #     price = doc.css(".pdp-price-div").css(".price").text.gsub(/\t/,'').gsub(/\n/,'').gsub(/\r/,'')
+  #     availability = doc.css(".pdp-avail").text.gsub(/\n/,'')
+  #     description = doc.css("div#longdesc.open").text.gsub(/\n/,'').gsub(/\r/,'')
+  #     tasting_notes = doc.css("span.pdp-value.open").text
+  #     caffeine_level = doc.css("input.caffeineLeveltxt").attribute("value").value
+  #     ingredients = doc.css(".ingredients.pdp-product-info").children[-2].text 
+      
+  #     # if hash, use '=', if array, use '<<'
+  #     @tea_details = {:price => price, :availability => availability, :description => description, :tasting_notes => tasting_notes, :caffeine_level => caffeine_level, :ingredients => ingredients} 
+      
+  #     # @tea_details.reject! {|k,v| v.include?(" ")} 
+  #     @tea_details 
+  # end
 
   def self.tea_details
     @tea_details

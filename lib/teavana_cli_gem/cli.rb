@@ -79,7 +79,8 @@ class TeavanaCliGem::CLI
   end
 
   def list_tea_details
-    TeavanaCliGem::TeaScraper.scrape_tea_details(@input_1.to_i, @input_2.to_i)
+    TeavanaCliGem::TeaScraper.scrape_specific_tea_kinds_urls(@input_1.to_i)
+    TeavanaCliGem::TeaScraper.scrape_tea_details(@input_2.to_i)
     tea_details_hash = TeavanaCliGem::TeaScraper.tea_details
     tea = TeavanaCliGem::Teas.new(tea_details_hash)
 
@@ -96,6 +97,25 @@ class TeavanaCliGem::CLI
     puts "INGREDIENTS".colorize(:blue)
     puts "#{tea.ingredients}"
   end
+
+  # def list_tea_details
+  #   TeavanaCliGem::TeaScraper.scrape_tea_details(@input_1.to_i, @input_2.to_i)
+  #   tea_details_hash = TeavanaCliGem::TeaScraper.tea_details
+  #   tea = TeavanaCliGem::Teas.new(tea_details_hash)
+
+  #   puts "PRICE".colorize(:blue)
+  #   puts "#{tea.price}"
+  #   puts "#{tea.availability}"
+  #   puts "DESCRIPTION".colorize(:blue)
+  #   puts "#{tea.description}"
+  #   puts "TASTING NOTES".colorize(:blue)
+  #   puts "#{tea.tasting_notes}"
+  #   puts "CAFFEINE LEVEL".colorize(:blue)
+  #   puts "#{tea.caffeine_level}"
+  #   caffeine_guide
+  #   puts "INGREDIENTS".colorize(:blue)
+  #   puts "#{tea.ingredients}"
+  # end
 
   def caffeine_guide
     puts "CAFFEINE GUIDE".colorize(:blue)
