@@ -1,5 +1,5 @@
 class TeavanaCliGem::Teas
-  attr_accessor :name, :availability, :price, :description, :tasting_notes, :caffeine_level, :ingredients # add :caffeine_guide later
+  attr_accessor :name, :availability, :price, :description, :tasting_notes, :caffeine_level, :ingredients
 
   @@all = []
 
