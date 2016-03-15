@@ -82,6 +82,7 @@ class TeavanaCliGem::CLI
   end
 
   def list_and_select_tea_kind
+    TeavanaCliGem::TeaScraper.scrape_tea_urls
     TeavanaCliGem::TeaScraper.scrape_specific_tea_kinds(@input_1)
     @tea_kinds = TeavanaCliGem::TeaScraper.list_specific_tea_kinds
     select_tea_kind

@@ -3,67 +3,58 @@ require 'nokogiri'
 require 'pry'
 
 class TeavanaCliGem::TeaScraper
-  # want to create a class array of teas that will puts out each tea
-  # 1. Green Tea
-  # 2. Black Tea 
-  # etc.
 
-  @@tea_types = [] # shovel tea types into this array
-  @@tea_urls = [] # shovel tea type urls into this array
+  # def self.scrape_tea_types
+  #   # scrape from teavana website index page
+  #   index_url = "http://www.teavana.com/us/en/tea"
+  #   doc = Nokogiri::HTML(open(index_url))
+
+  #   doc.css("ul#by-type li").each do |type| # selects teas 'BY TYPE'
+  #     # tea.text => "Green"
+  #     @@tea_types << type.text unless @@tea_types.include?(type.text)
+  #   end
+  #   @@tea_types
+  # end
 
   def self.scrape_tea_types
     # scrape from teavana website index page
     index_url = "http://www.teavana.com/us/en/tea"
     doc = Nokogiri::HTML(open(index_url))
-
-    doc.css("ul#by-type li").each do |type| # selects teas 'BY TYPE'
-      # tea.text => "Green"
-      @@tea_types << type.text unless @@tea_types.include?(type.text)
-    end
-    @@tea_types
+    # @tea_types = shovel tea types into this array (Green, Black, etc.)
+    @tea_types = doc.css("ul#by-type li").collect{|type| type.text} 
   end
 
   def self.scrape_tea_urls
     # some method to get the href of selected tea
     # shovel each href into @@tea_urls array
-
+    # @tea_urls = shovel tea type urls into this array
     index_url = "http://www.teavana.com/us/en/tea"
     doc = Nokogiri::HTML(open(index_url))
 
-    doc.css("ul#by-type li a").each do |type| # selects the 'a' element
-      @@tea_urls << type["href"] unless @@tea_urls.include?(type["href"])
-    end
-    @@tea_urls
+    # doc.css("ul#by-type li a").each do |type| # selects the 'a' element
+    #   @@tea_urls << type["href"] unless @@tea_urls.include?(type["href"])
+    # end
+    # @@tea_urls
+
+    @tea_urls = doc.css("ul#by-type li a").collect{|type| type["href"]}
   end
 
-  # def self.scrape_specific_tea_kinds(input)
-  #   # calls on @tea_urls array and selects appropriate index_url using index #
-  #   # index_url = user's number input
-    
-  #   scrape_tea_urls
-
-  #   index_url = @@tea_urls[input.to_i-1]
-  #   doc = Nokogiri::HTML(open(index_url))
-  #   @specific_tea_kinds = []
-
-  #   doc.css(".product_card").each do |card|
-  #      @specific_tea_kinds << card.css(".name").text unless @specific_tea_kinds.include?(card.css(".name").text)
-  #   end
-  #   @specific_tea_kinds
-  # end
+  def self.list_tea_types
+    scrape_tea_types
+    @tea_types.each.with_index(1) do |tea,i|
+      puts "#{i}. #{tea}"
+    end
+  end
 
   def self.scrape_specific_tea_kinds(input)
     # calls on @tea_urls array and selects appropriate index_url using index #
-    # index_url = user's number input
-    
+    # index_url = user's number input   
     scrape_tea_urls
 
-    index_url = @@tea_urls[input.to_i-1] + "?sz=1000&start=0&lazyload=true&format=ajax"
-
+    index_url = @tea_urls[input.to_i-1] + "?sz=1000&start=0&lazyload=true&format=ajax" # preloads entire page
     doc = Nokogiri::HTML(open(index_url))
 
-    @specific_tea_kinds = doc.css(".product_card").collect {|card| card.css(".name").text}
-    
+    @specific_tea_kinds = doc.css(".product_card").collect {|card| card.css(".name").text} 
   end
 
   def self.list_specific_tea_kinds
@@ -72,23 +63,13 @@ class TeavanaCliGem::TeaScraper
     end
   end
 
-  def self.list_tea_types
-    scrape_tea_types
-    @@tea_types.each.with_index(1) do |tea,i|
-      puts "#{i}. #{tea}"
-    end
-  end
-
   def self.scrape_specific_tea_kinds_urls(input1)
     scrape_tea_urls
-    index_url = @@tea_urls[input1-1] + "?sz=1000&start=0&lazyload=true&format=ajax"
+    index_url = @tea_urls[input1-1] + "?sz=1000&start=0&lazyload=true&format=ajax"
     doc = Nokogiri::HTML(open(index_url))
-    @specific_tea_kinds_urls = [] # array of urls for specific tea kinds for a single type of tea. Ex. Green => [url for matcha, url for dragon pearl]
-
-      doc.css(".product_card .name a").each do |card|
-         @specific_tea_kinds_urls << card["href"] unless @specific_tea_kinds_urls.include?(card["href"]) # url of each specific tea card (leads to tea details)
-       end
-    @specific_tea_kinds_urls
+    # @specific_tea_kinds_urls = array of urls for specific tea kinds for a single type of tea. Ex. Green => [url for matcha, url for dragon pearl]
+    
+    @specific_tea_kinds_urls = doc.css(".product_card .name a").collect{|card| card["href"]} # url of each specific tea card (leads to tea details)
   end
  
   def self.scrape_tea_details(input2)
