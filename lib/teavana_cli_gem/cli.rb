@@ -1,6 +1,6 @@
-# require 'open-uri'
-# require 'nokogiri'
-# require 'pry'
+require 'open-uri'
+require 'nokogiri'
+require 'pry'
 
 
 class TeavanaCliGem::CLI
@@ -15,18 +15,19 @@ class TeavanaCliGem::CLI
     puts "Thank you for browsing " + "Teavana".colorize(:green) + "! We hope to see you again!"
   end
 
-  def tea_types # lists types of tea
+  def display_tea_types # lists types of tea
     puts "Here is our menu of available types of tea:".colorize(:yellow)
     puts "Home > Tea".colorize(:red)
     puts " "
-    @teas = TeavanaCliGem::TeaScraper.list_tea_types
+    #@teas = TeavanaCliGem::TeaScraper.list_tea_types
     puts " "
     puts "Please enter the number of the tea you are interested in.".colorize(:cyan)
     puts "For example, if you would like to view our menu of #{@teas[0]} Teas, enter '1'.".colorize(:cyan)
   end
 
   def select_tea_type # selects type of tea - Green, Black, etc.
-    tea_types
+     @teas = TeavanaCliGem::TeaScraper.list_tea_types
+    display_tea_types
 
     begin
       @input_1 = gets.strip
@@ -84,7 +85,7 @@ class TeavanaCliGem::CLI
   def list_and_select_tea_kind
     TeavanaCliGem::TeaScraper.scrape_tea_urls
     TeavanaCliGem::TeaScraper.scrape_specific_tea_kinds(@input_1)
-    @tea_kinds = TeavanaCliGem::TeaScraper.list_specific_tea_kinds
+    @tea_kinds = list_specific_tea_kinds
     select_tea_kind
   end
 
