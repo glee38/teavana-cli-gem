@@ -80,8 +80,8 @@ class TeavanaCliGem::TeaScraper
       ingredients = "N/A"
 
       price = doc.css(".pdp-price-div").css("div[itemprop]").text.gsub(/\t/,'').gsub(/\n/,'').gsub(/\r/,'')
-      
-      availability = doc.css(".pdp-avail").text.gsub(/\n/,'')
+
+      availability = doc.css(".pdp-avail").text.gsub(/\n/,'').split(/\./).first
 
       description = doc.css("div#longdesc.open").text.gsub(/\n/,'').gsub(/\r/,'')
       
