@@ -1,11 +1,8 @@
 #!/usr/bin/env ruby
 require "bundler/setup"
-require "./lib/teavana_cli_gem"
-require "nokogiri"
-require "open-uri"
-require "colorize"
-require "pry"
+require_relative "../lib/teavana_cli_gem"
 
 
 
 TeavanaCliGem::CLI.new.call
+
